@@ -11,3 +11,5 @@ python main.py
 
 cd bot
 python main.py
+
+upd: the way to get tokens will be discribed later(most of them are free rn)
