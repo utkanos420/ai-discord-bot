@@ -1,5 +1,8 @@
 import asyncio
 import logging
+import requests
+import os
+
 from openai import OpenAI
 
 import discord
@@ -9,12 +12,14 @@ from loguru import logger
 
 from configs.config import bot_settings, openai_settings
 
+from gemini.handler import handle_attachments_and_request, handle_text_request
+
 
 logger.remove()
 logger.add(
     sink=lambda msg: print(msg, end=""),  # Вывод в stdout
-    format="<level>[{time:YYYY-MM-DD HH:mm:ss}] #{level:<8} {file.name}:" 
-           "{line} - {name} - {message}</level>",
+    format="<level>[{time:YYYY-MM-DD HH:mm:ss}] #{level:<8} {file.name}:"
+           "{line} - {name} - {ctx}</level>",
     level="DEBUG",
     colorize=True
 )
@@ -22,19 +27,19 @@ logger.add(
 
 intents = discord.Intents.default()
 intents.message_content = True
-intents.members = True  
+intents.members = True
 bot = commands.Bot(command_prefix=bot_settings.discord_bot_prefix, intents=intents)
 
 
-client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=openai_settings.openai_gemini_token,
-)
-
-
-@bot.command(name="prompt")
+@bot.command(name='prompt')
 async def get_prompt(ctx):
-    await ctx.send("")
+    message = ctx.message.content
+
+    if ctx.message.attachments:
+        await handle_attachments_and_request(ctx, message)
+    else:
+        await handle_text_request(ctx, message)
+
 
 if __name__ == "__main__":
     logger.info("Starting the bot...")
@@ -43,7 +48,3 @@ if __name__ == "__main__":
     logger.debug(f"Starting the discord bot with bot token {bot_settings.discord_bot_token} using prefix: {bot_settings.discord_bot_prefix}")
 
     bot.run(token=bot_settings.discord_bot_token)
-
-
-
-

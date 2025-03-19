@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from openai import OpenAI
 
 
 class BaseConfig(BaseSettings):
@@ -23,8 +24,21 @@ class OpenAISettings(BaseConfig):
     openai_debug_version: str = "Gemini 2 flash lite"
 
 
+class IgmurSettings(BaseConfig):
+
+    # client-id is a token to download photo from discord for openai to open it
+    igmur_client_token: str = "xxx"
+
+
 bot_settings = BotSettings()
 openai_settings = OpenAISettings()
+igmur_settings = IgmurSettings()
+
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=openai_settings.openai_gemini_token,
+)
 
 
 
