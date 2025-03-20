@@ -1,4 +1,4 @@
-from igmur.dowloader import upload_image_to_imgur
+from imgur.dowloader import upload_image_to_imgur
 import os
 from configs.config import client
 
@@ -34,17 +34,20 @@ async def handle_attachments_and_request(ctx, message):
             )
 
             result = completion.choices[0].message.content
-            await ctx.send(f"{result}")
+
+            while len(result) > 2000:
+                await ctx.send(result[:2000])
+                result = result[2000:]
+
+            await ctx.send(result)
 
         except Exception as e:
             await ctx.send(f"Error: {e}")
 
 
 async def handle_text_request(ctx, message):
-    await ctx.send("to be filled")
-    prompt = message
-
     try:
+        prompt = message
 
         completion = client.chat.completions.create(
             extra_headers={
@@ -69,4 +72,4 @@ async def handle_text_request(ctx, message):
         await ctx.send(result)
 
     except Exception as e:
-        await ctx.send("to be filled")
+        await ctx.send(f"Error: {e}")

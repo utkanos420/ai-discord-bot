@@ -1,9 +1,10 @@
-from configs.config import igmur_settings
+from configs.config import imgur_settings
 import requests
+
 
 def upload_image_to_imgur(image_path: str) -> str:
 
-    client_id = igmur_settings.igmur_client_token
+    client_id = imgur_settings.igmur_client_token
     url = "https://api.imgur.com/3/image"
     headers = {"Authorization": f"Client-ID {client_id}"}
 

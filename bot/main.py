@@ -16,13 +16,7 @@ from gemini.handler import handle_attachments_and_request, handle_text_request
 
 
 logger.remove()
-logger.add(
-    sink=lambda msg: print(msg, end=""),  # Вывод в stdout
-    format="<level>[{time:YYYY-MM-DD HH:mm:ss}] #{level:<8} {file.name}:"
-           "{line} - {name} - {ctx}</level>",
-    level="DEBUG",
-    colorize=True
-)
+logger.add("bot.log", format="{time} {level} {message}", level="DEBUG", colorize=True)
 
 
 intents = discord.Intents.default()
