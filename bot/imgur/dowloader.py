@@ -4,7 +4,7 @@ import requests
 
 def upload_image_to_imgur(image_path: str) -> str:
 
-    client_id = imgur_settings.igmur_client_token
+    client_id = imgur_settings.imgur_client_token
     url = "https://api.imgur.com/3/image"
     headers = {"Authorization": f"Client-ID {client_id}"}
 

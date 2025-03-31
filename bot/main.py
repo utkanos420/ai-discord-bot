@@ -10,7 +10,7 @@ from discord.ext import commands
 
 from loguru import logger
 
-from configs.config import bot_settings, openai_settings
+from configs.config import bot_settings, gemini_settings
 
 from gemini.handler import handle_attachments_and_request, handle_text_request
 
@@ -38,7 +38,7 @@ async def get_prompt(ctx):
 if __name__ == "__main__":
     logger.info("Starting the bot...")
 
-    logger.debug(f"Starting the openai agent with openrouter token {openai_settings.openai_debug_version}")
+    logger.debug(f"Starting the openai agent with openrouter token {gemini_settings.gemini_debug_version}")
     logger.debug(f"Starting the discord bot with bot token {bot_settings.discord_bot_token} using prefix: {bot_settings.discord_bot_prefix}")
 
     bot.run(token=bot_settings.discord_bot_token)

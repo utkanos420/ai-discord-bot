@@ -15,29 +15,29 @@ class BotSettings(BaseConfig):
     discord_bot_prefix: str = "!"
 
 
-class OpenAISettings(BaseConfig):
+class OpenRouterGeminiSettings(BaseConfig):
 
     # token will be installed with pydantic from .env
-    openai_gemini_token: str = "xxx"
+    gemini_token: str = "xxx"
 
     # using default value for debugging
-    openai_debug_version: str = "Gemini 2 flash lite"
+    gemini_debug_version: str = "Google: Gemini Pro 2.5 Experimental (free)"
 
 
-class IgmurSettings(BaseConfig):
+class ImgurSettings(BaseConfig):
 
     # client-id is a token to download photo from discord for openai to open it
-    igmur_client_token: str = "xxx"
+    imgur_client_token: str = "xxx"
 
 
 bot_settings = BotSettings()
-openai_settings = OpenAISettings()
-igmur_settings = IgmurSettings()
+gemini_settings = OpenRouterGeminiSettings()
+imgur_settings = ImgurSettings()
 
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=openai_settings.openai_gemini_token,
+    api_key=gemini_settings.gemini_token,
 )
 
 
