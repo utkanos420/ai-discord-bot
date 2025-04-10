@@ -21,7 +21,7 @@ class OpenRouterGeminiSettings(BaseConfig):
     gemini_token: str = "xxx"
 
     # using default value for debugging
-    gemini_debug_version: str = "Google: Gemini Pro 2.5 Experimental (free)"
+    gemini_debug_version: str = "Google: Gemini Flash 2.0 Experimental (free)"
 
 
 class ImgurSettings(BaseConfig):
@@ -33,7 +33,6 @@ class ImgurSettings(BaseConfig):
 bot_settings = BotSettings()
 gemini_settings = OpenRouterGeminiSettings()
 imgur_settings = ImgurSettings()
-
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",

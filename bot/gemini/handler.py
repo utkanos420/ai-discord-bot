@@ -1,7 +1,9 @@
 from openai import OpenAI
 import os
 from imgur.dowloader import upload_image_to_imgur
-from configs.config import client
+from configs.config import client as conf_client
+
+client = conf_client
 
 async def handle_attachments_and_request(ctx, message):
     save_dir = "temp"
@@ -22,25 +24,22 @@ async def handle_attachments_and_request(ctx, message):
                     "HTTP-Referer": "<YOUR_SITE_URL>",
                     "X-Title": "<YOUR_SITE_NAME>",
                 },
-                model="google/gemini-2.5-pro-exp-03-25:free",
+                extra_body={},
+                model="google/gemini-2.0-flash-exp:free",
                 messages=[
                     {
                         "role": "user",
                         "content": [
-                            {
-                                "type": "text",
-                                "text": prompt
-                            },
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": imgur_link
-                                }
-                            }
+                            {"type": "text", "text": prompt},
+                            {"type": "image_url", "image_url": {"url": imgur_link}}
                         ]
                     }
                 ]
             )
+
+            if not completion.choices or not completion.choices[0].message or not completion.choices[0].message.content:
+                await ctx.send("Ошибка: API вернул пустой ответ.")
+                return
 
             result = completion.choices[0].message.content
 
@@ -51,32 +50,29 @@ async def handle_attachments_and_request(ctx, message):
             await ctx.send(result)
 
         except Exception as e:
-            await ctx.send(f"Error: {e}")
-
+            await ctx.send(f"Ошибка: {e}")
 
 async def handle_text_request(ctx, message):
     try:
-
         await ctx.send("Запрос получен!")
-
-        prompt = message
 
         completion = client.chat.completions.create(
             extra_headers={
                 "HTTP-Referer": "<YOUR_SITE_URL>",
                 "X-Title": "<YOUR_SITE_NAME>",
             },
-            model="google/gemini-2.5-pro-exp-03-25:free",
+            extra_body={},
+            model="google/gemini-2.0-flash-exp:free",
             messages=[
                 {
                     "role": "user",
-                    "content": [{"type": "text", "text": prompt}]
+                    "content": [{"type": "text", "text": message}]
                 }
             ]
         )
 
         if not completion.choices or not completion.choices[0].message or not completion.choices[0].message.content:
-            await ctx.send("Ошибка: ответ от API пуст или недоступен.")
+            await ctx.send("Ошибка: API вернул пустой ответ.")
             return
 
         result = completion.choices[0].message.content
@@ -88,4 +84,4 @@ async def handle_text_request(ctx, message):
         await ctx.send(result)
 
     except Exception as e:
-        await ctx.send(f"Error: {e}")
+        await ctx.send(f"Ошибка: {e}")
